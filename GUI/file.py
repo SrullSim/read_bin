@@ -1,13 +1,17 @@
 import flet as ft
 import flet_map as map
 import math
+from business_logic.src.reader import Reader
+
+
 
 
 def main(page: ft.Page):
-    page.title = "מסלול טיסה - Flight Path"
+    page.title = " - Flight Path"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.rtl = True
     page.padding = 20
+
 
     # משתנים לשמירת layers
     marker_layer_ref = ft.Ref[map.MarkerLayer]()
@@ -44,12 +48,12 @@ def main(page: ft.Page):
 
         # יצירת markers עבור כל נקודה במרחק מסוים
         markers = []
-        marker_distance_km = 50  # מרחק בין markers בק"מ
+        marker_distance_km = 1.5  # מרחק בין markers בק"מ
 
         # marker התחלה (ירוק)
         markers.append(
             map.Marker(
-                content=ft.Icon(ft.Icons.FLIGHT_TAKEOFF, color=ft.Colors.GREEN, size=40),
+                content=ft.Icon(ft.Icons.FLIGHT_TAKEOFF, color=ft.Colors.GREEN, size=30),
                 coordinates=map.MapLatitudeLongitude(
                     coordinates_list[0]["Lat"],
                     coordinates_list[0]["Lng"]
@@ -72,7 +76,7 @@ def main(page: ft.Page):
             if accumulated_distance >= marker_distance_km:
                 markers.append(
                     map.Marker(
-                        content=ft.Icon(ft.Icons.LOCATION_ON, color=ft.Colors.BLUE, size=30),
+                        content=ft.Icon(ft.Icons.LOCATION_ON, color=ft.Colors.RED, size=20),
                         coordinates=map.MapLatitudeLongitude(
                             curr_coord["Lat"],
                             curr_coord["Lng"]
@@ -94,9 +98,9 @@ def main(page: ft.Page):
 
         # יצירת קו המסלול
         route_polyline = map.PolylineMarker(
-            border_stroke_width=4,
-            border_color=ft.Colors.BLUE,
-            color=ft.Colors.with_opacity(0.7, ft.Colors.BLUE),
+            border_stroke_width=3,
+            border_color=ft.Colors.LIGHT_BLUE,
+            color=ft.Colors.with_opacity(0.5, ft.Colors.BLUE),
             coordinates=[
                 map.MapLatitudeLongitude(coord["Lat"], coord["Lng"])
                 for coord in coordinates_list
@@ -107,7 +111,7 @@ def main(page: ft.Page):
         map_widget = map.Map(
             expand=True,
             initial_center=map.MapLatitudeLongitude(avg_lat, avg_lng),
-            initial_zoom=6,
+            initial_zoom=8,
             interaction_configuration=map.MapInteractionConfiguration(
                 flags=map.MapInteractiveFlag.ALL
             ),
@@ -147,45 +151,40 @@ def main(page: ft.Page):
     def on_file_picked(e: ft.FilePickerResultEvent):
         """טיפול בבחירת קובץ"""
         if e.files:
+            # שלב 1: קבלת הנתיב של הקובץ שנבחר
             file_path = e.files[0].path
-            status_text.value = f"קובץ נבחר: {e.files[0].name}"
+            file_name = e.files[0].name
+
+            # שלב 2: עדכון סטטוס שהקובץ נבחר
+            status_text.value = f"קובץ נבחר: {file_name} - מעבד..."
             status_text.color = ft.Colors.BLUE
             page.update()
 
-            # ==========================================
-            # כאן תכניס את הפונקציה שלך לעיבוד הקובץ
-            # ==========================================
-            # דוגמה:
-            # processed_data = your_processing_function(file_path)
-            #
-            # הפונקציה שלך צריכה להחזיר list של dictionaries בפורמט:
-            # [{"Lat": 34.555, "Lng": 23.555}, {"Lat": 35.123, "Lng": 24.789}, ...]
+            try:
+                # שלב 3: יצירת אובייקט Reader עם הנתיב של הקובץ שנבחר
+                reader = Reader(file_path)
 
-            # לצורך הדגמה - נתונים לדוגמה (מסלול טיסה מתל אביב לאילת)
-            processed_data = [
-                {"Lat": 32.0853, "Lng": 34.7818},  # תל אביב
-                {"Lat": 31.8969, "Lng": 34.8186},
-                {"Lat": 31.7069, "Lng": 35.0053},
-                {"Lat": 31.5167, "Lng": 35.1000},
-                {"Lat": 31.3264, "Lng": 35.2281},
-                {"Lat": 31.0461, "Lng": 35.3728},
-                {"Lat": 30.6114, "Lng": 35.0753},
-                {"Lat": 30.2653, "Lng": 35.0314},
-                {"Lat": 29.5581, "Lng": 34.9482},  # אילת
-            ]
-            # ==========================================
+                # שלב 4: קריאה ועיבוד הקובץ
+                processed_data = reader.read_bin_file()
 
-            if processed_data:
-                status_text.value = f"נמצאו {len(processed_data)} נקודות במסלול ✈️"
-                status_text.color = ft.Colors.GREEN
+                # שלב 5: בדיקה אם יש נתונים
+                if processed_data and len(processed_data) > 0:
+                    status_text.value = f"נמצאו {len(processed_data)} נקודות במסלול ✈️"
+                    status_text.color = ft.Colors.GREEN
 
-                # יצירת המפה עם המסלול
-                map_widget = create_map_with_route(processed_data)
-                map_container.content = map_widget
+                    # שלב 6: יצירת המפה עם המסלול על בסיס הנתונים שעובדו
+                    map_widget = create_map_with_route(processed_data)
+                    map_container.content = map_widget
 
-            else:
-                status_text.value = "שגיאה בעיבוד הקובץ"
+                else:
+                    status_text.value = "לא נמצאו נקודות GPS בקובץ"
+                    status_text.color = ft.Colors.ORANGE
+
+            except Exception as ex:
+                # שלב 7: טיפול בשגיאות
+                status_text.value = f"שגיאה בעיבוד הקובץ: {str(ex)}"
                 status_text.color = ft.Colors.RED
+                print(f"Error processing file: {ex}")
 
             page.update()
 
@@ -195,17 +194,17 @@ def main(page: ft.Page):
 
     # כפתור בחירת קובץ
     upload_button = ft.ElevatedButton(
-        "בחר קובץ להעלאה",
+        "Upload File",
         icon=ft.Icons.UPLOAD_FILE,
         on_click=lambda _: file_picker.pick_files(
-            dialog_title="בחר קובץ",
-            allow_multiple=False
+            dialog_title="Choose BIN file",
+            allow_multiple=False,
+            allowed_extensions=["bin"]  # רק קבצי .bin
         ),
     )
 
-    # טקסט סטטוס
     status_text = ft.Text(
-        "לא נבחר קובץ",
+        "please choose file",
         size=16,
         weight=ft.FontWeight.BOLD
     )
@@ -216,7 +215,7 @@ def main(page: ft.Page):
             ft.Container(
                 content=ft.Column([
                     ft.Text(
-                        "✈️ אפליקציית מסלול טיסה ✈️",
+                        "✈ Flight route app ✈",
                         size=28,
                         weight=ft.FontWeight.BOLD,
                         text_align=ft.TextAlign.CENTER
