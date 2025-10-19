@@ -1,8 +1,4 @@
-import csv
-from typing import Any
-from pymavlink import mavutil
-
-import csv
+from pprint import pprint
 from typing import Any
 from pymavlink import mavutil
 
