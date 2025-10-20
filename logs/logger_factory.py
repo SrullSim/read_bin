@@ -1,9 +1,11 @@
+"""This module defines a LoggerFactory class that creates and configures logs instances."""
+
 import logging
 import sys
 from logging import Logger
 from logging.handlers import TimedRotatingFileHandler
 
-from config.config import FORMATTER, LOG_FILE
+from config.configurations import FORMATTER, LOG_FILE
 
 # Define the format for the log messages.
 # This format includes the timestamp, log level, and the message itself.
@@ -12,7 +14,7 @@ from config.config import FORMATTER, LOG_FILE
 
 class LoggerFactory:
     """
-    A factory class to create and configure logger instances.
+    A factory class to create and configure logs instances.
     """
 
     def get_console_handler(self) -> logging.StreamHandler:
@@ -33,34 +35,42 @@ class LoggerFactory:
         # This handler writes to a file, rotating the log file daily.
         # It keeps 7 old log files as backups.
         file_handler = TimedRotatingFileHandler(LOG_FILE, when="midnight", backupCount=7)
-        # Set the formatter for this handler.
-        file_handler.setFormatter(FORMATTER)
-        return file_handler
+        try:
+            # Set the formatter for this handler.
+            file_handler.setFormatter(FORMATTER)
+            return file_handler
+        except Exception as e:
+            print(f"Failed to create file handler for logging: {e}")
+            return None
+        finally:
+            file_handler.close()
 
     def get_logger(self, logger_name: str) -> Logger:
         """
-        Creates and configures a logger instance.
+        Creates and configures a logs instance.
         """
-        # Get a logger instance with the specified name.
+        # Get a logs instance with the specified name.
         logger = logging.getLogger(logger_name)
 
         # Set the logging level. INFO means it will handle INFO, WARNING, ERROR, and CRITICAL messages.
         logger.setLevel(logging.INFO)
 
-        # Add the console and file handlers to the logger.
-        # This logger will now log to both the console and the file.
+        # Add the console and file handlers to the logs.
+        # This logs will now log to both the console and the file.
         logger.addHandler(self.get_console_handler())
         logger.addHandler(self.get_file_handler())
 
-        # This prevents log messages from being propagated to the root logger.
-        logger.propagate = False
+        # This prevents log messages from being propagated to the root logs.
+        logger.propagate = True
 
         return logger
 
 
-if __name__ == "__main__":
-    # Get the logger instance. You can name it anything.
-    # It's common practice to use __name__ to get the name of the current module.
-    logger = LoggerFactory().get_logger(__name__)
+# create a global logs instance for singleton usage
+logger = LoggerFactory()
 
-    logger.info("This is an example of a successful task update.")
+
+if __name__ == "__main__":
+    # Get the logs instance. You can name it anything.
+    # It's common practice to use __name__ to get the name of the current module.
+    pass

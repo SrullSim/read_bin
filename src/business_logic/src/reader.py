@@ -1,6 +1,11 @@
+"""module to read .bin files and extract GPS coordinates"""
+
 import traceback
+
 from pymavlink import mavutil
-from config.config import MSG_NUMBER_TO_SHOW
+
+from config.configurations import MSG_NUMBER_TO_SHOW
+from logs.logger_factory import logger
 
 
 class Reader:
@@ -8,13 +13,14 @@ class Reader:
 
     def __init__(self, path: str):
         self.path = path
+        self.logger = logger.get_logger(__name__)
         try:
             self.mavlink_connection = mavutil.mavlink_connection(self.path, robust_parsing=True)
         except Exception as e:
             print(f"error connect mavlink: {e}")
             self.mavlink_connection = None
 
-    def read_bin_file(self, msg_number_to_show: int =MSG_NUMBER_TO_SHOW) -> list:
+    def read_bin_file(self, msg_number_to_show: int = MSG_NUMBER_TO_SHOW) -> list:
         """get path to .bin file
         :return list of dictionaries for each flight"""
 
@@ -50,8 +56,8 @@ class Reader:
                         continue
 
                 # get latitude and longitude for each message
-                lat = getattr(msg, "Lat")
-                lng = getattr(msg, "Lng")
+                lat: float = getattr(msg, "Lat")
+                lng: float = getattr(msg, "Lng")
 
                 # check if lat and lng are in degrees or microdegrees
                 if abs(lat) > 180:
@@ -60,7 +66,7 @@ class Reader:
                     lng = lng / 10000000.0
 
                 # build point dictionary
-                point = {"Lat": lat, "Lng": lng}
+                point: dict = {"Lat": lat, "Lng": lng}
 
                 # check for duplicates
                 if point != previous_point:
@@ -72,12 +78,12 @@ class Reader:
                     if msg_count % msg_number_to_show == 0:
                         print(f"Processed {msg_count} points")
 
-            print(f"Final result: {len(lat_lng_list)} unique points")
+            print(f"Final result: {len(lat_lng_list)} points")
+            self.logger.info(f"Final result: {len(lat_lng_list)} points found")
             return lat_lng_list
 
         except Exception as e:
-            print(f"error from read_bin_file(): {e}")
-
+            self.logger.error(f"error from read_bin_file(): {e}")
 
             traceback.print_exc()
             return []
