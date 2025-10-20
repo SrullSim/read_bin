@@ -1,10 +1,10 @@
+"""Main application module for the flight route viewer GUI."""
+
 import flet as ft
 
+from logs.logger_factory import logger
 from src.gui.file_handler.file_processor import FileProcessor
 from src.gui.map.map_builder import MapRouteBuilder
-from logger.logger import LoggerFactory
-
-# create the route app
 
 
 class FlightRouteApp:
@@ -12,11 +12,11 @@ class FlightRouteApp:
 
     def __init__(self, page: ft.Page):
         self.page = page
-        self.page.title = " - Flight Path"
+        self.page.title = " - Flight Path - "
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.rtl = True
         self.page.padding = 20
-        self.logger = LoggerFactory().get_logger(__name__)
+        self.logger = logger.get_logger(__name__)
 
         self.map_builder = MapRouteBuilder()
         self.status_text = ft.Text("Please choose file", size=16, weight=ft.FontWeight.BOLD)

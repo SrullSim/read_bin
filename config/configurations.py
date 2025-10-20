@@ -14,7 +14,7 @@ LOG_FILE = "project_logs.txt"  # The name of the log file.
 
 
 MARKER_DISTANCE_KM = 200  # Default distance between markers in kilometers
-MSG_NUMBER_TO_SHOW = 5000  # Default distance between massag markers in kilometers
+MSG_NUMBER_TO_SHOW = 10000  # Default distance between massag markers in kilometers
 # names of latitude and longitude fields in the data
 LATITUDE_FIELD = "Lat"
 LONGITUDE_FIELD = "Lng"

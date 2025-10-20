@@ -1,12 +1,12 @@
+"""build the map with layers and markers"""
+
 import math
 
 import flet as ft
 import flet_map as map_ft
 
-from config.config import LATITUDE_FIELD, LONGITUDE_FIELD, MARKER_DISTANCE_KM
-from logger.logger import LoggerFactory
-
-# build the map with layers and markers
+from config.configurations import LATITUDE_FIELD, LONGITUDE_FIELD, MARKER_DISTANCE_KM
+from logs.logger_factory import logger
 
 
 class MapRouteBuilder:
@@ -16,7 +16,7 @@ class MapRouteBuilder:
         self.marker_layer_ref = ft.Ref[map_ft.MarkerLayer]()
         self.polyline_layer_ref = ft.Ref[map_ft.PolylineLayer]()
         self.map_container = ft.Container(expand=True)
-        self.logger = LoggerFactory().get_logger(__name__)
+        self.logger = logger.get_logger(__name__)
 
     @staticmethod
     def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -39,8 +39,8 @@ class MapRouteBuilder:
 
         try:
 
-            avg_lat = sum(coord[LATITUDE_FIELD] for coord in coordinates_list) / len(coordinates_list)
-            avg_lng = sum(coord[LONGITUDE_FIELD] for coord in coordinates_list) / len(coordinates_list)
+            avg_lat = coordinates_list[0][LATITUDE_FIELD]
+            avg_lng = coordinates_list[0][LONGITUDE_FIELD]
 
             markers = []
             marker_distance_km = MARKER_DISTANCE_KM
@@ -103,7 +103,7 @@ class MapRouteBuilder:
             map_widget = map_ft.Map(
                 expand=True,
                 initial_center=map_ft.MapLatitudeLongitude(avg_lat, avg_lng),
-                initial_zoom=8,
+                initial_zoom=10,
                 interaction_configuration=map_ft.MapInteractionConfiguration(flags=map_ft.MapInteractiveFlag.ALL),
                 on_init=lambda e: print("Initialized Map"),
                 layers=[
@@ -133,7 +133,7 @@ class MapRouteBuilder:
                     ),
                 ],
             )
-            # self.logger.info(f"Map built with {len(coordinates_list)} coordinates and {len(markers)} markers")
+            self.logger.info(f"Map built with {len(coordinates_list)} coordinates and {len(markers)} markers")
             return map_widget
 
         except Exception as e:

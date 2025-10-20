@@ -1,7 +1,10 @@
+import traceback
+
 import flet as ft
 
+from logs.logger_factory import logger
 from src.business_logic.src.reader import Reader
-from src.gui.map.map_builder import  MapRouteBuilder
+from src.gui.map.map_builder import MapRouteBuilder
 
 # handles file selection and data processing
 
@@ -9,11 +12,14 @@ from src.gui.map.map_builder import  MapRouteBuilder
 class FileProcessor:
     """Handles file selection and data processing."""
 
-    def __init__(self, status_text: ft.Text, map_builder: MapRouteBuilder, map_container: MapRouteBuilder, page: ft.Page):
+    def __init__(
+        self, status_text: ft.Text, map_builder: MapRouteBuilder, map_container: MapRouteBuilder, page: ft.Page
+    ):
         self.status_text = status_text
         self.map_builder = map_builder
         self.map_container = map_container
         self.page = page
+        self.logger = logger.get_logger(__name__)
 
     def on_file_picked(self, e: ft.FilePickerResultEvent) -> None:
         """Processes the selected file and updates the UI."""
@@ -28,7 +34,7 @@ class FileProcessor:
                 processed_data = reader.read_bin_file()
                 if processed_data and len(processed_data) > 0:
                     self.status_text.value = f"Found {len(processed_data)} points in flight path ✈️"
-                    self.status_text.color = ft.Colors.GREEN
+                    self.status_text.color = ft.Colors.BLUE
                     map_widget = self.map_builder.create_map_with_route(processed_data, self.page)
                     self.map_container.content = map_widget
                 else:
@@ -37,5 +43,6 @@ class FileProcessor:
             except Exception as ex:
                 self.status_text.value = f"Error processing file: {str(ex)}"
                 self.status_text.color = ft.Colors.RED
-                print(f"Error processing file: {ex}")
+                traceback.print_exc()
+                self.logger.error(f"Error processing file: {ex}")
             self.page.update()
