@@ -1,5 +1,8 @@
 import flet as ft
+
 from business_logic.src.reader import Reader
+
+# handles file selection and data processing
 
 
 class FileProcessor:
@@ -11,7 +14,7 @@ class FileProcessor:
         self.map_container = map_container
         self.page = page
 
-    def on_file_picked(self, e: ft.FilePickerResultEvent):
+    def on_file_picked(self, e: ft.FilePickerResultEvent) -> None:
         """Processes the selected file and updates the UI."""
         if e.files:
             file_path = e.files[0].path

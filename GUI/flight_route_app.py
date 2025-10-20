@@ -1,6 +1,10 @@
 import flet as ft
-from GUI.map.map_builder import MapRouteBuilder
+
 from GUI.file_handler.file_processor import FileProcessor
+from GUI.map.map_builder import MapRouteBuilder
+from logger.logger import LoggerFactory
+
+# create the route app
 
 
 class FlightRouteApp:
@@ -12,18 +16,15 @@ class FlightRouteApp:
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.rtl = True
         self.page.padding = 20
+        self.logger = LoggerFactory.get_logger(__name__)
 
         self.map_builder = MapRouteBuilder()
-        self.status_text = ft.Text(
-            "Please choose file",
-            size=16,
-            weight=ft.FontWeight.BOLD
-        )
+        self.status_text = ft.Text("Please choose file", size=16, weight=ft.FontWeight.BOLD)
         self.file_processor = FileProcessor(
             self.status_text,
             self.map_builder,
             self.map_builder.map_container,
-            self.page
+            self.page,
         )
 
         self.file_picker = ft.FilePicker(on_result=self.file_processor.on_file_picked)
@@ -35,28 +36,35 @@ class FlightRouteApp:
             on_click=lambda _: self.file_picker.pick_files(
                 dialog_title="Choose BIN file",
                 allow_multiple=False,
-                allowed_extensions=["bin"]
+                allowed_extensions=["bin"],
             ),
         )
 
-    def build(self):
+    def build(self) -> None:
         """Builds the main UI layout."""
         self.page.add(
-            ft.Column([
-                ft.Container(
-                    content=ft.Column([
-                        ft.Text(
-                            "✈ Flight route app ✈",
-                            size=28,
-                            weight=ft.FontWeight.BOLD,
-                            text_align=ft.TextAlign.CENTER
+            ft.Column(
+                [
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                ft.Text(
+                                    "✈ Flight route app ✈",
+                                    size=28,
+                                    weight=ft.FontWeight.BOLD,
+                                    text_align=ft.TextAlign.CENTER,
+                                ),
+                                ft.Divider(),
+                                self.upload_button,
+                                self.status_text,
+                            ],
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         ),
-                        ft.Divider(),
-                        self.upload_button,
-                        self.status_text,
-                    ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                    padding=20,
-                ),
-                self.map_builder.map_container,
-            ], expand=True, spacing=10)
+                        padding=20,
+                    ),
+                    self.map_builder.map_container,
+                ],
+                expand=True,
+                spacing=10,
+            )
         )
