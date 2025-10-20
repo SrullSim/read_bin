@@ -15,7 +15,7 @@ class LoggerFactory:
     A factory class to create and configure logger instances.
     """
 
-    def get_console_handler(self):
+    def get_console_handler(self) -> logging.StreamHandler:
         """
         Creates a handler to print log messages to the console (command line).
         """
@@ -25,7 +25,7 @@ class LoggerFactory:
         console_handler.setFormatter(FORMATTER)
         return console_handler
 
-    def get_file_handler(self):
+    def get_file_handler(self) -> TimedRotatingFileHandler:
         """
         Creates a handler to write log messages to a file.
         The file will rotate daily, keeping a backup for 7 days.
@@ -37,7 +37,7 @@ class LoggerFactory:
         file_handler.setFormatter(FORMATTER)
         return file_handler
 
-    def get_logger(self, logger_name):
+    def get_logger(self, logger_name: str) -> Logger:
         """
         Creates and configures a logger instance.
         """
@@ -61,6 +61,6 @@ class LoggerFactory:
 if __name__ == "__main__":
     # Get the logger instance. You can name it anything.
     # It's common practice to use __name__ to get the name of the current module.
-    logger = Logger().get_logger(__name__)
+    logger = LoggerFactory().get_logger(__name__)
 
     logger.info("This is an example of a successful task update.")

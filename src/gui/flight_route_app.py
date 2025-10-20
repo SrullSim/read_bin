@@ -1,7 +1,7 @@
 import flet as ft
 
-from GUI.file_handler.file_processor import FileProcessor
-from GUI.map.map_builder import MapRouteBuilder
+from src.gui.file_handler.file_processor import FileProcessor
+from src.gui.map.map_builder import MapRouteBuilder
 from logger.logger import LoggerFactory
 
 # create the route app
@@ -16,7 +16,7 @@ class FlightRouteApp:
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.rtl = True
         self.page.padding = 20
-        self.logger = LoggerFactory.get_logger(__name__)
+        self.logger = LoggerFactory().get_logger(__name__)
 
         self.map_builder = MapRouteBuilder()
         self.status_text = ft.Text("Please choose file", size=16, weight=ft.FontWeight.BOLD)

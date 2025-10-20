@@ -1,12 +1,12 @@
-from typing import Any
-
+import traceback
 from pymavlink import mavutil
+from config.config import MSG_NUMBER_TO_SHOW
 
 
 class Reader:
     """read file in .bin format and extract GPS coordinates"""
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         self.path = path
         try:
             self.mavlink_connection = mavutil.mavlink_connection(self.path, robust_parsing=True)
@@ -14,7 +14,7 @@ class Reader:
             print(f"error connect mavlink: {e}")
             self.mavlink_connection = None
 
-    def read_bin_file(self, msg_number_to_show=2000) -> list[dict[str, Any]]:
+    def read_bin_file(self, msg_number_to_show: int =MSG_NUMBER_TO_SHOW) -> list:
         """get path to .bin file
         :return list of dictionaries for each flight"""
 
@@ -23,12 +23,13 @@ class Reader:
             return []
 
         try:
-            lat_lng_list = []
+            lat_lng_list: list = []
             previous_point = None
             msg_count = 0
+            run = True
 
             # loop to read all GPS messages
-            while True:
+            while run:
                 # reading all GPS messages
                 msg = self.mavlink_connection.recv_match(
                     type=["GPS", "GPS_RAW_INT", "GLOBAL_POSITION_INT"], blocking=False
@@ -37,7 +38,7 @@ class Reader:
                 # if no more messages, exit loop
                 if msg is None:
                     print(f"Finished reading. Total points: {len(lat_lng_list)}")
-                    break
+                    run = False
 
                 # check if message has Lat and Lng attributes
                 if not hasattr(msg, "Lat") or not hasattr(msg, "Lng"):
@@ -76,7 +77,7 @@ class Reader:
 
         except Exception as e:
             print(f"error from read_bin_file(): {e}")
-            import traceback
+
 
             traceback.print_exc()
             return []

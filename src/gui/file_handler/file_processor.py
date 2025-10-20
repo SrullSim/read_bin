@@ -1,6 +1,7 @@
 import flet as ft
 
-from business_logic.src.reader import Reader
+from src.business_logic.src.reader import Reader
+from src.gui.map.map_builder import  MapRouteBuilder
 
 # handles file selection and data processing
 
@@ -8,7 +9,7 @@ from business_logic.src.reader import Reader
 class FileProcessor:
     """Handles file selection and data processing."""
 
-    def __init__(self, status_text, map_builder, map_container, page):
+    def __init__(self, status_text: ft.Text, map_builder: MapRouteBuilder, map_container: MapRouteBuilder, page: ft.Page):
         self.status_text = status_text
         self.map_builder = map_builder
         self.map_container = map_container

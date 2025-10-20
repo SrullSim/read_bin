@@ -1,6 +1,6 @@
 import flet as ft
 
-from GUI.flight_route_app import FlightRouteApp
+from src.gui.flight_route_app import FlightRouteApp
 
 # run the Flet app
 
