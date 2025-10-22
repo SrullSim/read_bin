@@ -2,7 +2,7 @@
 
 import flet as ft
 
-from logs.logger_factory import logger
+from src.utils.configurations import PAGE_TITLE
 from src.gui.file_handler.file_processor import FileProcessor
 from src.gui.map.map_builder import MapRouteBuilder
 
@@ -12,11 +12,10 @@ class FlightRouteApp:
 
     def __init__(self, page: ft.Page):
         self.page = page
-        self.page.title = " - Flight Path - "
+        self.page.title = PAGE_TITLE
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.rtl = True
         self.page.padding = 20
-        self.logger = logger.get_logger(__name__)
 
         self.map_builder = MapRouteBuilder()
         self.status_text = ft.Text("Please choose file", size=16, weight=ft.FontWeight.BOLD)
@@ -52,6 +51,7 @@ class FlightRouteApp:
                                     "✈ Flight route app ✈",
                                     size=28,
                                     weight=ft.FontWeight.BOLD,
+                                    color=ft.Colors.BLUE,
                                     text_align=ft.TextAlign.CENTER,
                                 ),
                                 ft.Divider(),

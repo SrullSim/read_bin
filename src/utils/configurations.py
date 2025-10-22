@@ -3,24 +3,30 @@ import logging
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent
-# DATA_DIR = PROJECT_ROOT / "data"
-UI_DIR = PROJECT_ROOT / "gui"
 CONFIG_DIR = PROJECT_ROOT / "config"
-FILES_HANDLER_DIR = UI_DIR / "file_handler"
+SRC_DIR = PROJECT_ROOT / "src"
+GUI_DIR = SRC_DIR / "gui"
+FILES_HANDLER_DIR = GUI_DIR / "file_handler"
+MAP_DIR = GUI_DIR / "map"
+LOGS_DIR = PROJECT_ROOT / "logs"
 
 
-FORMATTER = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s", "%Y-%m-%d, %H:%M")
-LOG_FILE = "project_logs.txt"  # The name of the log file.
+FORMATTER = logging.Formatter("%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s() - %(message)s")
+LOG_FILE = LOGS_DIR / "project_logs.txt"  # The name and location of the log file.
 
 
 MARKER_DISTANCE_KM = 200  # Default distance between markers in kilometers
-MSG_NUMBER_TO_SHOW = 10000  # Default distance between massag markers in kilometers
+MSG_NUMBER_TO_SHOW = 10000  # Default distance between massage markers in kilometers
 # names of latitude and longitude fields in the data
 LATITUDE_FIELD = "Lat"
 LONGITUDE_FIELD = "Lng"
 
+PAGE_TITLE = " - Flight Path - "
 
-SETTINGS_FILE_PATH = CONFIG_DIR / "settings.json"
+URL_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+LAUNCH_URL = "https://openstreetmap.org/copyright"
+
+SETTINGS_FILE_PATH = CONFIG_DIR / "config.json"
 try:
     with open(SETTINGS_FILE_PATH, "r") as f:
         settings = json.load(f)

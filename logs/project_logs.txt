@@ -1,0 +1,10 @@
+2025-10-22 10:33:01,567 - INFO - read_bin_file.py:82 - process_bin_file() - Final result: 60893 points found
+2025-10-22 10:33:01,682 - INFO - map_builder.py:173 - create_map_with_route() - Map built with 60893 coordinates and 2 markers
+2025-10-22 10:33:36,140 - INFO - read_bin_file.py:82 - process_bin_file() - Final result: 60893 points found
+2025-10-22 10:33:36,439 - INFO - map_builder.py:173 - create_map_with_route() - Map built with 60893 coordinates and 2 markers
+2025-10-22 10:36:01,697 - INFO - read_bin_file.py:82 - process_bin_file() - Final result: 60893 points found
+2025-10-22 10:36:02,059 - INFO - map_builder.py:173 - create_map_with_route() - Map built with 60893 coordinates and 2 markers
+2025-10-22 10:42:18,478 - INFO - read_bin_file.py:82 - process_bin_file() - Final result: 60893 points found
+2025-10-22 10:42:18,698 - INFO - map_builder.py:173 - create_map_with_route() - Map built with 60893 coordinates and 2 markers
+2025-10-22 10:53:42,933 - INFO - read_bin_file.py:82 - process_bin_file() - Final result: 60893 points found
+2025-10-22 10:53:43,035 - INFO - map_builder.py:173 - create_map_with_route() - Map built with 60893 coordinates and 2 markers

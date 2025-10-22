@@ -26,7 +26,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-
+.logs/
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
@@ -215,7 +215,6 @@ Desktop.ini
 *.swo
 
 # Log files
-*.log
 
 # Database files
 *.db
@@ -226,6 +225,8 @@ Desktop.ini
 config.ini
 secrets.json
 .secrets
+config.json
+
 
 # ML/Data Science specific
 *.pkl
@@ -238,3 +239,7 @@ processes/data/processed/
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+# formats
+mypy.ini
+pylintrc

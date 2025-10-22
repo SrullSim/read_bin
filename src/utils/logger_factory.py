@@ -5,7 +5,7 @@ import sys
 from logging import Logger
 from logging.handlers import TimedRotatingFileHandler
 
-from config.configurations import FORMATTER, LOG_FILE
+from src.utils.configurations import FORMATTER, LOG_FILE
 
 # Define the format for the log messages.
 # This format includes the timestamp, log level, and the message itself.
@@ -30,20 +30,10 @@ class LoggerFactory:
     def get_file_handler(self) -> TimedRotatingFileHandler:
         """
         Creates a handler to write log messages to a file.
-        The file will rotate daily, keeping a backup for 7 days.
         """
-        # This handler writes to a file, rotating the log file daily.
-        # It keeps 7 old log files as backups.
-        file_handler = TimedRotatingFileHandler(LOG_FILE, when="midnight", backupCount=7)
-        try:
-            # Set the formatter for this handler.
-            file_handler.setFormatter(FORMATTER)
-            return file_handler
-        except Exception as e:
-            print(f"Failed to create file handler for logging: {e}")
-            return None
-        finally:
-            file_handler.close()
+        file_handler = TimedRotatingFileHandler(LOG_FILE, when="midnight", backupCount=7, encoding="utf-8")
+        file_handler.setFormatter(FORMATTER)
+        return file_handler
 
     def get_logger(self, logger_name: str) -> Logger:
         """
@@ -60,14 +50,14 @@ class LoggerFactory:
         logger.addHandler(self.get_console_handler())
         logger.addHandler(self.get_file_handler())
 
-        # This prevents log messages from being propagated to the root logs.
+        # This sent log messages to the root logs.
         logger.propagate = True
 
         return logger
 
 
 # create a global logs instance for singleton usage
-logger = LoggerFactory()
+logger = LoggerFactory().get_logger(__name__)
 
 
 if __name__ == "__main__":

@@ -4,23 +4,23 @@ import traceback
 
 from pymavlink import mavutil
 
-from config.configurations import MSG_NUMBER_TO_SHOW
-from logs.logger_factory import logger
+from src.utils.configurations import MSG_NUMBER_TO_SHOW
+from src.utils.logger_factory import logger
 
 
-class Reader:
+class ReadeBinFile:
     """read file in .bin format and extract GPS coordinates"""
 
     def __init__(self, path: str):
         self.path = path
-        self.logger = logger.get_logger(__name__)
+
         try:
             self.mavlink_connection = mavutil.mavlink_connection(self.path, robust_parsing=True)
         except Exception as e:
             print(f"error connect mavlink: {e}")
             self.mavlink_connection = None
 
-    def read_bin_file(self, msg_number_to_show: int = MSG_NUMBER_TO_SHOW) -> list:
+    def process_bin_file(self, msg_number_to_show: int = MSG_NUMBER_TO_SHOW) -> list:
         """get path to .bin file
         :return list of dictionaries for each flight"""
 
@@ -79,11 +79,11 @@ class Reader:
                         print(f"Processed {msg_count} points")
 
             print(f"Final result: {len(lat_lng_list)} points")
-            self.logger.info(f"Final result: {len(lat_lng_list)} points found")
+            logger.info(f"Final result: {len(lat_lng_list)} points found")
             return lat_lng_list
 
         except Exception as e:
-            self.logger.error(f"error from read_bin_file(): {e}")
+            logger.error(f"error from read_bin_file(): {e}")
 
             traceback.print_exc()
             return []

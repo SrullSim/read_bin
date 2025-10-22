@@ -1,0 +1,11 @@
+2025-10-21 10:45:14,299 - INFO - reader.py:82 - read_bin_file() - Final result: 60893 points found
+2025-10-21 10:45:14,694 - INFO - map_builder.py:136 - create_map_with_route() - Map built with 60893 coordinates and 2 markers
+2025-10-21 11:51:49,083 - ERROR - file_processor.py:51 - on_file_picked() - Error processing file: 'Logger' object has no attribute 'get_logger'
+2025-10-21 11:52:55,951 - INFO - readebinfile.py:82 - read_bin_file() - Final result: 60893 points found
+2025-10-21 11:52:56,041 - INFO - map_builder.py:136 - create_map_with_route() - Map built with 60893 coordinates and 2 markers
+2025-10-21 14:29:35,884 - INFO - readebinfile.py:82 - process_bin_file() - Final result: 60893 points found
+2025-10-21 14:29:35,896 - ERROR - map_builder.py:172 - create_map_with_route() - Error building map: 'MapRouteBuilder' object has no attribute 'calculate_distance'
+2025-10-21 14:32:35,997 - INFO - readebinfile.py:82 - process_bin_file() - Final result: 60893 points found
+2025-10-21 14:32:36,085 - INFO - map_builder.py:171 - create_map_with_route() - Map built with 60893 coordinates and 2 markers
+2025-10-21 14:34:03,069 - INFO - read_bin_file.py:82 - process_bin_file() - Final result: 60893 points found
+2025-10-21 14:34:03,257 - INFO - map_builder.py:171 - create_map_with_route() - Map built with 60893 coordinates and 2 markers

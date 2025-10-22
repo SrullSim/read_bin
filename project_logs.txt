@@ -1,8 +1,0 @@
-2025-10-20, 12:57 | INFO | Map built with 60893 coordinates and 2 markers
-2025-10-20, 13:02 | INFO | Map built with 60893 coordinates and 2 markers
-2025-10-20, 15:29 | INFO | Map built with 60893 coordinates and 2 markers
-2025-10-20, 16:03 | INFO | Map built with 60893 coordinates and 2 markers
-2025-10-20, 16:05 | INFO | Map built with 60893 coordinates and 2 markers
-2025-10-20, 16:06 | INFO | Map built with 60893 coordinates and 2 markers
-2025-10-20, 16:38 | INFO | Final result: 60893 points found
-2025-10-20, 16:38 | INFO | Map built with 60893 coordinates and 2 markers

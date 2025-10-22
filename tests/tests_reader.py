@@ -1,7 +1,7 @@
 """Unit tests for the Reader class and configuration settings."""
 
-from config.configurations import BIN_FILE_PATH
-from src.business_logic.src.reader import Reader
+from src.utils.configurations import BIN_FILE_PATH
+from src.business_logic.src.read_bin_file import ReadeBinFile
 
 
 def test_bin_file_path():
@@ -11,8 +11,8 @@ def test_bin_file_path():
 
 
 def read_bin_file():
-    reader = Reader(BIN_FILE_PATH)
-    data = reader.read_bin_file()
+    reader = ReadeBinFile(BIN_FILE_PATH)
+    data = reader.process_bin_file()
     pass
 
 
